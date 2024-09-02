@@ -9,7 +9,6 @@ import javax.swing.SpringLayout;
 
 public class SideBar implements CustomComponent<JPanel> {
 	
-	
 	public static final int DEFAULT_SIDEBAR_WIDTH = 370;
 	public static final int LEFT_PAD = 60;
 	public static final int RIGHT_PAD = -60;

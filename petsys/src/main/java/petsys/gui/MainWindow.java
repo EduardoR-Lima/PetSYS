@@ -20,9 +20,7 @@ public class MainWindow {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 
-		initMainWindowPanel();
-		
-		
+		initMainWindowPanel();	
 	
 	}
 	
