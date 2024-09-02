@@ -1,6 +1,7 @@
 package petsys.gui;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MainWindow {
@@ -14,8 +15,17 @@ public class MainWindow {
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 		
-		MainWindowPanel mainPanel = new MainWindowPanel();
-		frame.getContentPane().add(mainPanel.getContentPanel());
+		MainWindowPanel mainWindowPanel = new MainWindowPanel();
+		
+		JButton button = new JButton("Clientes");
+		button.setPreferredSize(SideBarConstants.PREFERRED_BUTTON_SIZE);
+		mainWindowPanel.getSideBar().addComponent(button);
+		
+		JButton button2 = new JButton("Vendas");
+		button2.setPreferredSize(SideBarConstants.PREFERRED_BUTTON_SIZE);
+		mainWindowPanel.getSideBar().addComponent(button2);
+		
+		frame.getContentPane().add(mainWindowPanel.getContentPanel());
 		
 		
 	}

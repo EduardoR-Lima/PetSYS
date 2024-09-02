@@ -9,78 +9,47 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
-public class MainWindowPanel {
+public class MainWindowPanel implements CustomPanel, CardComponent {
+	
+	private static final String CARD_ID = "cardMainWindow";
 	
 	private JPanel mainPanel;
-	private JPanel sideBar;
-	
-	//Paineis a serem adicionados por fora
-	private JPanel clientesPanel;
-	private JPanel vendasPanel;
-	private JPanel atendPanel;
-	private JPanel produtosPanel;
-	private JPanel servicosPanel;
-	
-	//Nome dos cards
-	private static final String CLIENTES = "cardClientes";
-	private static final String VENDAS = "cardVendas";
-	private static final String ATENDIMENTOS = "cardAtend";
-	private static final String PRODUTOS = "cardProdutos";
-	private static final String SERVICOS = "cardServiços";
+	private SideBar sideBar;
+	private JPanel workArea;
 	
 	
 	public MainWindowPanel() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout(0, 0));
 		
-		sideBar = new JPanel();
-		sideBar.setPreferredSize(new Dimension(370, mainPanel.getHeight()));
-		sideBar.setBackground(Color.BLUE);
-		sideBar.setLayout(new SpringLayout());
+		sideBar = new SideBar();
+		sideBar.getContentPanel().setBackground(Color.BLUE); //Temporário
 		
-		mainPanel.add(sideBar, BorderLayout.WEST);
+		mainPanel.add(sideBar.getContentPanel(), BorderLayout.WEST);	
 		
-		
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setPreferredSize(new Dimension(0, 60));
-		
-		sideBar.add(btnNewButton);
-		
-		
-		
-		
-		
-		
-		JPanel workArea = new JPanel();
+		workArea = new JPanel();
 		workArea.setLayout(new CardLayout());
 		workArea.setBackground(Color.RED);
 		
 		mainPanel.add(workArea, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * 
-	 * Note: This method is not thread safe, call it under SwingUtilities.invokeLater()
-	 * 
-	 * @param button
-	 */
-	private void addButtonToSideBar(JButton button) {
-		SpringLayout sideBarLayout = (SpringLayout) sideBar.getLayout();
-		Component[] sideBarComponents = sideBar.getComponents();
-		if (sideBarComponents.length == 0) {
-			
-		};
-		sideBarLayout.putConstraint(SpringLayout.NORTH, button, 70, SpringLayout.NORTH, sideBar);
-		sideBarLayout.putConstraint(SpringLayout.WEST, button, 60, SpringLayout.WEST, sideBar);
-		sideBarLayout.putConstraint(SpringLayout.EAST, button, -60, SpringLayout.EAST, sideBar);
+	public SideBar getSideBar() {
+		return sideBar;
 	}
 	
+	@Override
 	public JPanel getContentPanel() {
 		return mainPanel;
+	}
+	
+	@Override
+	public String getCardId() {
+		return CARD_ID;
 	}
 	
 	public static class CallWorkAreaCard implements ActionListener {
@@ -98,4 +67,5 @@ public class MainWindowPanel {
 		}
 		
 	}
+
 }
