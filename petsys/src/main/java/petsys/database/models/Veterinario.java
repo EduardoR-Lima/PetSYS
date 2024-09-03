@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class Veterinario {
+public class Veterinario implements Model {
 	private int id;
 	private String crmv;
 	private String nome;

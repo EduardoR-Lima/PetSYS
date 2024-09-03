@@ -3,69 +3,105 @@ package petsys.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout;
 
-public class MainWindowPanel implements CustomPanel, CardComponent {
-	
+public class MainWindowPanel implements CardComponent<JPanel> {
+
 	private static final String CARD_ID = "cardMainWindow";
-	
-	private JPanel mainPanel;
+
+	private JPanel basePanel;
 	private SideBar sideBar;
-	private JPanel workArea;
-	
+	private JPanel workSpace;
+
+	public MainWindowPanel(int sideBarWidth) {
+		basePanel = new JPanel();
+		basePanel.setLayout(new BorderLayout(0, 0));
+
+		// Criando SideBar
+		sideBar = new SideBar(sideBarWidth);
+		sideBar.getBaseComponent().setBackground(Color.BLUE); // Temporário
+		basePanel.add(sideBar.getBaseComponent(), BorderLayout.WEST);
+
+		
+		// Criando workSpace
+		workSpace = new JPanel();
+		workSpace.setLayout(new CardLayout());
+		
+		// Panel padrão
+		JPanel defaultPanel = new JPanel(new GridBagLayout());
+		ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/icons/logo.png"));
+		JLabel logoLabel = new JLabel(logoIcon);
+		
+		defaultPanel.add(logoLabel);
+		
+		workSpace.add(defaultPanel, "default");
+		
+		basePanel.add(workSpace, BorderLayout.CENTER);
+
+	}
 	
 	public MainWindowPanel() {
-		mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout(0, 0));
-		
-		sideBar = new SideBar();
-		sideBar.getContentPanel().setBackground(Color.BLUE); //Temporário
-		
-		mainPanel.add(sideBar.getContentPanel(), BorderLayout.WEST);	
-		
-		workArea = new JPanel();
-		workArea.setLayout(new CardLayout());
-		workArea.setBackground(Color.RED);
-		
-		mainPanel.add(workArea, BorderLayout.CENTER);
+		this(SideBar.DEFAULT_SIDEBAR_WIDTH);
 	}
-	
-	public SideBar getSideBar() {
-		return sideBar;
+
+	public void addSideBarButton(JButton button) {
+		sideBar.addComponent(button);
 	}
-	
+
+	public void tieButtonTo(JButton button, CardComponent<JPanel> component) {
+		String cardId = component.getCardId();
+		JPanel panel = component.getBaseComponent();
+		workSpace.add(panel, cardId);
+		button.addActionListener(new CallWorkAreaCard(cardId));
+	}
+
 	@Override
-	public JPanel getContentPanel() {
-		return mainPanel;
+	public JPanel getBaseComponent() {
+		return basePanel;
 	}
-	
+
 	@Override
 	public String getCardId() {
 		return CARD_ID;
 	}
-	
-	public static class CallWorkAreaCard implements ActionListener {
-		
+
+	private class CallWorkAreaCard implements ActionListener {
+
 		private String cardId;
-		
+		private int state;
+
 		public CallWorkAreaCard(String cardId) {
 			this.cardId = cardId;
+			this.state = 0;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// wal = work area layout
+			CardLayout wal = (CardLayout) workSpace.getLayout();
 			
+			if (state == 0) {
+				wal.show(workSpace, cardId);
+			} else {
+				wal.show(workSpace, "default");
+			}
+			
+			switchState();
 			
 		}
 		
+		private void switchState() {
+			if (state == 0) state = 1;
+			else state = 0;
+		}
+
 	}
 
 }

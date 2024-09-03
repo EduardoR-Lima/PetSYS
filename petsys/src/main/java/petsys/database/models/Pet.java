@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class Pet {
+public class Pet implements Model{
 	private int id;
 	private String nome;
 	private String dataNascimento;

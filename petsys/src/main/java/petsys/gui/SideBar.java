@@ -7,43 +7,49 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
-public class SideBar implements CustomPanel {
-
-	private JPanel mainPanel;
+public class SideBar implements CustomComponent<JPanel> {
+	
+	
+	public static final int DEFAULT_SIDEBAR_WIDTH = 370;
+	public static final int LEFT_PAD = 60;
+	public static final int RIGHT_PAD = -60;
+	public static final int TOP_PAD = 70;
+	public static final int BETWEEN_PAD = 40;
+	
+	private JPanel basePanel;
 	private SpringLayout panelLayout;
 
-	public SideBar() {
+	public SideBar(int width) {
 		panelLayout = new SpringLayout();
-		mainPanel = new JPanel();
-		mainPanel.setLayout(panelLayout);
+		basePanel = new JPanel();
+		basePanel.setLayout(panelLayout);
 
 		// Preferred size deve ser restruturado para se adequar ao tamanho da tela
-		mainPanel.setPreferredSize(new Dimension(360, 0));
-
+		basePanel.setPreferredSize(new Dimension(width, 0));
 	}
 
 	public void addComponent(JComponent component) {
-		Component[] sideBarComponents = mainPanel.getComponents();
+		Component[] sideBarComponents = basePanel.getComponents();
 
 		if (sideBarComponents.length == 0) {
-			panelLayout.putConstraint(SpringLayout.NORTH, component, SideBarConstants.TOP_PAD, SpringLayout.NORTH,
-					mainPanel);
+			panelLayout.putConstraint(SpringLayout.NORTH, component, TOP_PAD, SpringLayout.NORTH,
+					basePanel);
 		} else {
 			Component northAnchor = sideBarComponents[sideBarComponents.length - 1];
-			panelLayout.putConstraint(SpringLayout.NORTH, component, SideBarConstants.BETWEEN_PAD, SpringLayout.SOUTH,
+			panelLayout.putConstraint(SpringLayout.NORTH, component, BETWEEN_PAD, SpringLayout.SOUTH,
 					northAnchor);
 		}
 
-		panelLayout.putConstraint(SpringLayout.WEST, component, SideBarConstants.LEFT_PAD, SpringLayout.WEST,
-				mainPanel);
-		panelLayout.putConstraint(SpringLayout.EAST, component, SideBarConstants.RIGHT_PAD, SpringLayout.EAST,
-				mainPanel);
+		panelLayout.putConstraint(SpringLayout.WEST, component, LEFT_PAD, SpringLayout.WEST,
+				basePanel);
+		panelLayout.putConstraint(SpringLayout.EAST, component, RIGHT_PAD, SpringLayout.EAST,
+				basePanel);
 
-		mainPanel.add(component);
+		basePanel.add(component);
 	}
 
 	@Override
-	public JPanel getContentPanel() {
-		return mainPanel;
+	public JPanel getBaseComponent() {
+		return basePanel;
 	}
 }

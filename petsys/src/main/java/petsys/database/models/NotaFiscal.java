@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class NotaFiscal {
+public class NotaFiscal implements Model{
 	private int id;
 	private String tipo;
 	private String dataEmissao;

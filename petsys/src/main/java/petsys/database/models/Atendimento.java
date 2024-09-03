@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class Atendimento {
+public class Atendimento implements Model {
 
 		private int id;
 		private String dataAtendimento;

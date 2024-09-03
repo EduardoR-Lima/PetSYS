@@ -1,6 +1,8 @@
 package petsys.gui;
 
-public interface CardComponent {
+import java.awt.Component;
+
+public interface CardComponent<T extends Component> extends CustomComponent<T> {
 	
 	public String getCardId();
 }

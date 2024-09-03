@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class ProdutoVendido {
+public class ProdutoVendido implements Model {
 		private int sequencia;
 		private NotaFiscal nf;
 		private Produto produto;

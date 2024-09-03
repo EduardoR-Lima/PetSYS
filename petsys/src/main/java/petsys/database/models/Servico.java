@@ -1,6 +1,6 @@
 package petsys.database.models;
 
-public class Servico {
+public class Servico implements Model {
 
 		private int id;
 		private String nome;
