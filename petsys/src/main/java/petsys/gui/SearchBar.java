@@ -1,25 +1,19 @@
 package petsys.gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
-import petsys.database.models.AbstractSearchKey;
-import petsys.database.models.Model;
-
-public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
+public class SearchBar implements CustomComponent<JPanel> {
 
 	public static final Dimension DEFAULT_SIZE = new Dimension(0, 40);
 
@@ -30,9 +24,10 @@ public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
 	private SpringLayout baseLayout;
 	private JLabel iconLabel;
 	private JTextField textField;
-	private JComboBox<AbstractSearchKey<T>> comboBox;
+	private JComboBox<String> comboBox;
 
-	public SearchBar(Dimension barSize, AbstractSearchKey<T>[] searchKeys) {
+	@SuppressWarnings("serial")
+	public SearchBar(Dimension barSize, String[] searchKeys) {
 		baseLayout = new SpringLayout();
 		basePanel = new JPanel(baseLayout);
 		basePanel.setBackground(Color.WHITE);
@@ -47,11 +42,10 @@ public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
 		textField.setBorder(null);
 		
 		comboBox = new JComboBox<>(searchKeys);
-		comboBox.insertItemAt(null, 0);
-		comboBox.setSelectedIndex(0);
-		comboBox.setBorder(new EmptyBorder(0, 0, 0, 0));
 		comboBox.setPreferredSize(new Dimension(70, 0));
-		comboBox.setRenderer(new PromptComboBoxRenderer("Key"));
+		comboBox.setRenderer(new BasicComboBoxRenderer() {
+			{setHorizontalAlignment(CENTER);}
+		});
 		
 		baseLayout.putConstraint(SpringLayout.WEST, iconLabel, 15, SpringLayout.WEST, basePanel);
 		baseLayout.putConstraint(SpringLayout.VERTICAL_CENTER, iconLabel, 0, SpringLayout.VERTICAL_CENTER, basePanel);
@@ -67,7 +61,7 @@ public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
 		basePanel.add(textField);
 	}
 
-	public SearchBar(AbstractSearchKey<T>[] searchKeys) {
+	public SearchBar(String[] searchKeys) {
 		this(DEFAULT_SIZE, searchKeys);
 	}
 
@@ -80,9 +74,12 @@ public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
 		return textField.getText();
 	}
 
-	@SuppressWarnings("unchecked")
-	public AbstractSearchKey<T> getSelectedSearchKey() {
-		return (AbstractSearchKey<T>) comboBox.getSelectedItem();
+	public String getSelectedSearchKey() {
+		return (String) comboBox.getSelectedItem();
+	}
+	
+	public void clearSearchText() {
+		textField.setText("");
 	}
 
 	@Override
@@ -90,28 +87,4 @@ public class SearchBar<T extends Model> implements CustomComponent<JPanel> {
 		return basePanel;
 	}
 	
-	@SuppressWarnings("serial")
-	private static class PromptComboBoxRenderer extends BasicComboBoxRenderer {
-		
-		private String prompt;
-		
-		public PromptComboBoxRenderer(String prompt) {
-			super();
-			this.prompt = prompt;
-			setHorizontalAlignment(CENTER);
-		}
-		
-		@Override
-		public Component getListCellRendererComponent(
-				JList<?> list, Object value, int index,
-				boolean isSelected, boolean cellHasFocus) 
-		{
-			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			
-			if (value == null) {
-				setText("[%s]".formatted(prompt));
-			}
-			return this;
-		}
-	}
 }

@@ -73,33 +73,26 @@ public class MainWindowPanel implements CardComponent<JPanel> {
 	}
 
 	private class CallWorkAreaCard implements ActionListener {
-
+		
+		private static String lastCard = "default";
 		private String cardId;
-		private int state;
 
 		public CallWorkAreaCard(String cardId) {
 			this.cardId = cardId;
-			this.state = 0;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// wal = work area layout
 			CardLayout wal = (CardLayout) workSpace.getLayout();
-			
-			if (state == 0) {
-				wal.show(workSpace, cardId);
-			} else {
+			if (lastCard.equals(cardId)) {
 				wal.show(workSpace, "default");
+				lastCard = "deafult";
+			} else {
+				wal.show(workSpace, cardId);
+				lastCard = cardId;
 			}
 			
-			switchState();
-			
-		}
-		
-		private void switchState() {
-			if (state == 0) state = 1;
-			else state = 0;
 		}
 
 	}

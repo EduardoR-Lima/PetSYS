@@ -1,121 +1,169 @@
 package petsys.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.border.MatteBorder;
 
-import petsys.database.models.AbstractSearchKey;
 import petsys.database.models.Model;
 
 public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
-	
+
 	public static final Dimension DEFAULT_SIZE = new Dimension(0, 180);
-	
+
 	private boolean hasFilter;
-	
+
 	private JPanel basePanel;
 	private BoxLayout baseLayout;
 	private JLabel title;
-	private SearchBar<T> searchBar;
+	private SearchBar searchBar;
 	private JButton searchButton;
-	
+
+	private JPanel titlePanel;
+	private JPanel searchPanel;
 	private JPanel filtersPanel;
 	
-	public SearchHeader(String titleText, AbstractSearchKey<T>[] searchKeys) {
+	private ResultFilter<T>[] filters;
+	
+	public SearchHeader() {
 		this.hasFilter = false;
-		
+
 		basePanel = new JPanel();
 		basePanel.setPreferredSize(DEFAULT_SIZE);
-		
+
 		basePanel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
-		
+
 		baseLayout = new BoxLayout(basePanel, BoxLayout.Y_AXIS);
 		basePanel.setLayout(baseLayout);
 		
+		titlePanel = new JPanel(new SpringLayout());
+		basePanel.add(titlePanel);
 		
-		addTitle(titleText);
-		addSearchTool(searchKeys);
+		searchPanel = new JPanel(new SpringLayout());
+		basePanel.add(searchPanel);
 		
-		filtersPanel = new JPanel(new GridBagLayout());
+		filtersPanel = new JPanel(new SpringLayout());
 		basePanel.add(filtersPanel);
-		
+
 	}
 	
+	public SearchHeader(String titleText, String[] searchKeys) {
+		this();
+		addTitle(titleText);
+		addSearchTool(searchKeys);
+	}
+
 	public void setTitleTextSize(int size) {
 		Font currentFont = title.getFont();
 		Font newFont = new Font(currentFont.getFamily(), currentFont.getStyle(), 35);
 		title.setFont(newFont);
 	}
-	
-	private void addTitle(String titleText) {
+
+	public void addTitle(String titleText) {
 		title = new JLabel(titleText);
 		setTitleTextSize(35);
-		
-		SpringLayout layout = new SpringLayout();
-		JPanel panel = new JPanel(layout);
-		
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, title, 0, SpringLayout.VERTICAL_CENTER, panel);
-		layout.putConstraint(SpringLayout.WEST, title, 30, SpringLayout.WEST, panel);
-		panel.add(title);
-		
-		basePanel.add(panel);
+
+		SpringLayout layout = (SpringLayout) titlePanel.getLayout();
+
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, title, 0, SpringLayout.VERTICAL_CENTER, titlePanel);
+		layout.putConstraint(SpringLayout.WEST, title, 30, SpringLayout.WEST, titlePanel);
+		titlePanel.add(title);
 	}
-	
-	private void addSearchTool(AbstractSearchKey<T>[] searchKeys) {
+
+	public void addSearchTool(String[] searchKeys) {
 		int leftPad = 50;
 		int rightPad = -50;
-		
-		searchBar = new SearchBar<T>(searchKeys);
-		
+
+		searchBar = new SearchBar(searchKeys);
+
 		searchButton = new JButton("Pesquisar");
 		searchButton.setPreferredSize(new Dimension(220, SearchBar.DEFAULT_SIZE.height));
-		
+
 		JPanel sbp = searchBar.getBaseComponent();
-		SpringLayout layout = new SpringLayout();
-		JPanel panel = new JPanel(layout);
-		
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchButton, 0, SpringLayout.VERTICAL_CENTER, panel);
-		layout.putConstraint(SpringLayout.EAST, searchButton, rightPad, SpringLayout.EAST, panel);
-		panel.add(searchButton);
-		
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, sbp, 0, SpringLayout.VERTICAL_CENTER, panel);
-		layout.putConstraint(SpringLayout.WEST, sbp, leftPad, SpringLayout.WEST, panel);
+		SpringLayout layout = (SpringLayout) searchPanel.getLayout();
+
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchButton, 0, SpringLayout.VERTICAL_CENTER, searchPanel);
+		layout.putConstraint(SpringLayout.EAST, searchButton, rightPad, SpringLayout.EAST, searchPanel);
+		searchPanel.add(searchButton);
+
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, sbp, 0, SpringLayout.VERTICAL_CENTER, searchPanel);
+		layout.putConstraint(SpringLayout.WEST, sbp, leftPad, SpringLayout.WEST, searchPanel);
 		layout.putConstraint(SpringLayout.EAST, sbp, rightPad, SpringLayout.WEST, searchButton);
-		panel.add(sbp);
-		
-		basePanel.add(panel);
+		searchPanel.add(sbp);
+	}
+
+	public void addFilters(ResultFilter<T>[] filters) {
+		this.hasFilter = true;
+		this.filters = filters;
+		int leftPad = 50;
+		SpringLayout layout = (SpringLayout) filtersPanel.getLayout();
+
+		JLabel label = new JLabel("Filtrar por:");
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, label, 0, SpringLayout.VERTICAL_CENTER, filtersPanel);
+		layout.putConstraint(SpringLayout.WEST, label, leftPad, SpringLayout.WEST, filtersPanel);
+		filtersPanel.add(label);
+
+		for (int i = 0; i < filters.length; i++) {
+			layout.putConstraint(SpringLayout.VERTICAL_CENTER, filters[i].getBaseComponent(), 0,
+					SpringLayout.VERTICAL_CENTER, filtersPanel);
+			if (i == 0) {
+				layout.putConstraint(SpringLayout.WEST, filters[i].getBaseComponent(), 20, SpringLayout.EAST,
+						label);
+			} else {
+				layout.putConstraint(SpringLayout.WEST, filters[i].getBaseComponent(), 20, SpringLayout.EAST,
+						filters[i-1].getBaseComponent());
+			}
+			filtersPanel.add(filters[i].getBaseComponent());
+		}
+
 	}
 	
-	public void addFilters() {
-		
+	public void addSearchButtonListener(ActionListener listener) {
+		searchButton.addActionListener(listener);
 	}
 	
-	private JPanel createFiltersPanel() {
-		//JLabel component = ...
-		SpringLayout layout = new SpringLayout();
-		JPanel panel = new JPanel(layout);
-		
-		//layout.putConstraint(SpringLayout.VERTICAL_CENTER, component, 0, SpringLayout.VERTICAL_CENTER, panel);
-		//layout.putConstraint(null, component, 0, null, panel);
-		
-		return panel;
+	public String getCurrentSearchKey() {
+		return searchBar.getSelectedSearchKey();
 	}
- 	
+	
+	public String getCurrentSearch() {
+		return searchBar.getSearch();
+	}
+
 	public boolean hasFilter() {
 		return hasFilter;
 	}
 	
+	public void clearCurrentSearchEntry() {
+		searchBar.clearSearchText();
+	}
+	
+	public void clearAllFilterItems() {
+		Component[] comps = filtersPanel.getComponents();
+		
+		for (ResultFilter<T> filter : filters) {
+			filter.clearItems();
+		}
+	}
+	
+	public void populateFilters(T[] values) {
+		for (ResultFilter<T> filter : filters) {
+			filter.populate(values);
+		}
+	}
+
 	@Override
 	public JPanel getBaseComponent() {
 		return basePanel;
 	}
-	
+
 }

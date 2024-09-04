@@ -1,7 +1,5 @@
 package petsys.database.models;
 
-import java.util.HashMap;
-
 public class Cliente implements Model {
 	private Integer id;
 	private String cpf;
@@ -85,30 +83,6 @@ public class Cliente implements Model {
 
 	public void setDataAdicao(String dataAdicao) {
 		this.dataAdicao = dataAdicao;
-	}
-
-	public static class ClienteSearchKey extends AbstractSearchKey<Cliente> {
-		public static final ClienteSearchKey ID;
-		public static final ClienteSearchKey CPF;
-		public static final ClienteSearchKey NOME;
-		public static final ClienteSearchKey ENDERECO;
-		public static final ClienteSearchKey TELEFONE_CEL;
-		public static final ClienteSearchKey EMAIL;
-		public static final ClienteSearchKey DATA_ADICAO;
-
-		private ClienteSearchKey(String name, String... keys) {
-			super(keys, name);
-		}
-
-		static {
-			ID = new ClienteSearchKey("Id", "id");
-			CPF = new ClienteSearchKey("CPF", "cpf");
-			NOME = new ClienteSearchKey("Nome", "nome");
-			ENDERECO = new ClienteSearchKey("Endereço", "endereco");
-			TELEFONE_CEL = new ClienteSearchKey("Tel./Cel.", "tel_cel");
-			EMAIL = new ClienteSearchKey("E-mail", "email");
-			DATA_ADICAO = new ClienteSearchKey("Data de A.", "data_adicao"); 
-		}
 	}
 
 }
