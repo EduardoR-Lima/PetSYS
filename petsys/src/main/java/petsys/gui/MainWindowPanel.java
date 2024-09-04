@@ -26,7 +26,7 @@ public class MainWindowPanel implements CardComponent<JPanel> {
 
 		// Criando SideBar
 		sideBar = new SideBar(sideBarWidth);
-		sideBar.getBaseComponent().setBackground(Color.BLUE); // Temporário
+		sideBar.getBaseComponent().setBackground(Color.LIGHT_GRAY); // Temporário
 		basePanel.add(sideBar.getBaseComponent(), BorderLayout.WEST);
 
 		

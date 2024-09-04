@@ -12,7 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.border.MatteBorder;
 
-public class SearchHeader implements CustomComponent<JPanel> {
+import petsys.database.models.AbstractSearchKey;
+import petsys.database.models.Model;
+
+public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
 	
 	public static final Dimension DEFAULT_SIZE = new Dimension(0, 180);
 	
@@ -21,10 +24,12 @@ public class SearchHeader implements CustomComponent<JPanel> {
 	private JPanel basePanel;
 	private BoxLayout baseLayout;
 	private JLabel title;
-	private SearchBar searchBar;
+	private SearchBar<T> searchBar;
 	private JButton searchButton;
 	
-	public SearchHeader(String titleText, String[] searchKeys) {
+	private JPanel filtersPanel;
+	
+	public SearchHeader(String titleText, AbstractSearchKey<T>[] searchKeys) {
 		this.hasFilter = false;
 		
 		basePanel = new JPanel();
@@ -39,9 +44,7 @@ public class SearchHeader implements CustomComponent<JPanel> {
 		addTitle(titleText);
 		addSearchTool(searchKeys);
 		
-		JPanel filtersPanel = new JPanel(new GridBagLayout());
-		filtersPanel.add(new JLabel("Pendente"));
-		
+		filtersPanel = new JPanel(new GridBagLayout());
 		basePanel.add(filtersPanel);
 		
 	}
@@ -66,11 +69,11 @@ public class SearchHeader implements CustomComponent<JPanel> {
 		basePanel.add(panel);
 	}
 	
-	private void addSearchTool(String[] searchKeys) {
+	private void addSearchTool(AbstractSearchKey<T>[] searchKeys) {
 		int leftPad = 50;
 		int rightPad = -50;
 		
-		searchBar = new SearchBar(searchKeys);
+		searchBar = new SearchBar<T>(searchKeys);
 		
 		searchButton = new JButton("Pesquisar");
 		searchButton.setPreferredSize(new Dimension(220, SearchBar.DEFAULT_SIZE.height));
@@ -89,6 +92,10 @@ public class SearchHeader implements CustomComponent<JPanel> {
 		panel.add(sbp);
 		
 		basePanel.add(panel);
+	}
+	
+	public void addFilters() {
+		
 	}
 	
 	private JPanel createFiltersPanel() {

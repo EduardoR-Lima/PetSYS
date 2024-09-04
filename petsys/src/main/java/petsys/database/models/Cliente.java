@@ -1,7 +1,9 @@
 package petsys.database.models;
 
+import java.util.HashMap;
+
 public class Cliente implements Model {
-	private int id;
+	private Integer id;
 	private String cpf;
 	private String nome;
 	private String endereco;
@@ -85,27 +87,27 @@ public class Cliente implements Model {
 		this.dataAdicao = dataAdicao;
 	}
 
-	public static class ClienteSearchKeys extends AbstractSearchKeys<Cliente> {
-		public static final ClienteSearchKeys ID;
-		public static final ClienteSearchKeys CPF;
-		public static final ClienteSearchKeys NOME;
-		public static final ClienteSearchKeys ENDERECO;
-		public static final ClienteSearchKeys TELEFONE_CEL;
-		public static final ClienteSearchKeys EMAIL;
-		public static final ClienteSearchKeys DATA_ADICAO;
+	public static class ClienteSearchKey extends AbstractSearchKey<Cliente> {
+		public static final ClienteSearchKey ID;
+		public static final ClienteSearchKey CPF;
+		public static final ClienteSearchKey NOME;
+		public static final ClienteSearchKey ENDERECO;
+		public static final ClienteSearchKey TELEFONE_CEL;
+		public static final ClienteSearchKey EMAIL;
+		public static final ClienteSearchKey DATA_ADICAO;
 
-		private ClienteSearchKeys(String[] keys, String name) {
+		private ClienteSearchKey(String name, String... keys) {
 			super(keys, name);
 		}
 
 		static {
-			ID = new ClienteSearchKeys(new String[]{"id"}, "Id");
-			CPF = new ClienteSearchKeys(new String[]{"cpf"}, "CPF");
-			NOME = new ClienteSearchKeys(new String[]{"nome"}, "Nome");
-			ENDERECO = new ClienteSearchKeys(new String[]{"endereco"}, "Endereço");
-			TELEFONE_CEL = new ClienteSearchKeys(new String[]{"tel_cel"}, "Tel./Cel.");
-			EMAIL = new ClienteSearchKeys(new String[]{"email"}, "E-mail");
-			DATA_ADICAO = new ClienteSearchKeys(new String[]{"data_adicao"}, "Data de A."); 
+			ID = new ClienteSearchKey("Id", "id");
+			CPF = new ClienteSearchKey("CPF", "cpf");
+			NOME = new ClienteSearchKey("Nome", "nome");
+			ENDERECO = new ClienteSearchKey("Endereço", "endereco");
+			TELEFONE_CEL = new ClienteSearchKey("Tel./Cel.", "tel_cel");
+			EMAIL = new ClienteSearchKey("E-mail", "email");
+			DATA_ADICAO = new ClienteSearchKey("Data de A.", "data_adicao"); 
 		}
 	}
 
