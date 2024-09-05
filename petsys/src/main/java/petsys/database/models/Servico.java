@@ -59,11 +59,11 @@ public class Servico implements Model {
 			this.especificacoes = especificacoes;
 		}
 
-		public double getValordoServico() {
+		public double getValor() {
 			return valor;
 		}
 
-		public void setValordoServico(double valordoServico) {
+		public void setValor(double valordoServico) {
 			this.valor = valordoServico;
 		}
 

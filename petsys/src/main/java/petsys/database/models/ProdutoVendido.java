@@ -1,7 +1,7 @@
 package petsys.database.models;
 
 public class ProdutoVendido implements Model {
-		private int sequencia;
+		private int id;
 		private NotaFiscal nf;
 		private Produto produto;
 		private int quantidade;
@@ -10,8 +10,8 @@ public class ProdutoVendido implements Model {
 		public ProdutoVendido() {
 		}
 
-		public ProdutoVendido(int sequencia, NotaFiscal nf, Produto produto, int quantidade, double valorTotal) {
-				this.sequencia = sequencia;
+		public ProdutoVendido(int id, NotaFiscal nf, Produto produto, int quantidade, double valorTotal) {
+				this.id = id;
 				this.nf = nf;
 				this.produto = produto;
 				this.quantidade = quantidade;
@@ -19,16 +19,16 @@ public class ProdutoVendido implements Model {
 		}
 		@Override
 		public String toString() {
-			return "ProdutoVendido [sequencia=" + sequencia + ", nf=" + nf + ", produto=" + produto + ", quantidade="
+			return "ProdutoVendido [sequencia=" + id + ", nf=" + nf + ", produto=" + produto + ", quantidade="
 					+ quantidade + ", valorTotal=" + valorTotal + "]";
 		}
 
-		public int getSequencia() {
-			return sequencia;
+		public int getId() {
+			return id;
 		}
 
-		public void setSequencia(int sequencia) {
-			this.sequencia = sequencia;
+		public void setId(int id) {
+			this.id = id;
 		}
 
 		public NotaFiscal getNf() {
