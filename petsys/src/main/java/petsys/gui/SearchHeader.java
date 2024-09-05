@@ -5,10 +5,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
@@ -32,7 +32,7 @@ public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
 	private JPanel searchPanel;
 	private JPanel filtersPanel;
 	
-	private ResultFilter<T>[] filters;
+	private List<ResultFilter<T>> filters;
 	
 	public SearchHeader() {
 		this.hasFilter = false;
@@ -101,7 +101,7 @@ public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
 		searchPanel.add(sbp);
 	}
 
-	public void addFilters(ResultFilter<T>[] filters) {
+	public void addFilters(List<ResultFilter<T>> filters) {
 		this.hasFilter = true;
 		this.filters = filters;
 		int leftPad = 50;
@@ -112,17 +112,17 @@ public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
 		layout.putConstraint(SpringLayout.WEST, label, leftPad, SpringLayout.WEST, filtersPanel);
 		filtersPanel.add(label);
 
-		for (int i = 0; i < filters.length; i++) {
-			layout.putConstraint(SpringLayout.VERTICAL_CENTER, filters[i].getBaseComponent(), 0,
+		for (int i = 0; i < filters.size(); i++) {
+			layout.putConstraint(SpringLayout.VERTICAL_CENTER, filters.get(i).getBaseComponent(), 0,
 					SpringLayout.VERTICAL_CENTER, filtersPanel);
 			if (i == 0) {
-				layout.putConstraint(SpringLayout.WEST, filters[i].getBaseComponent(), 20, SpringLayout.EAST,
+				layout.putConstraint(SpringLayout.WEST, filters.get(i).getBaseComponent(), 20, SpringLayout.EAST,
 						label);
 			} else {
-				layout.putConstraint(SpringLayout.WEST, filters[i].getBaseComponent(), 20, SpringLayout.EAST,
-						filters[i-1].getBaseComponent());
+				layout.putConstraint(SpringLayout.WEST, filters.get(i).getBaseComponent(), 20, SpringLayout.EAST,
+						filters.get(i-1).getBaseComponent());
 			}
-			filtersPanel.add(filters[i].getBaseComponent());
+			filtersPanel.add(filters.get(i).getBaseComponent());
 		}
 
 	}
@@ -155,7 +155,7 @@ public class SearchHeader<T extends Model> implements CustomComponent<JPanel> {
 		}
 	}
 	
-	public void populateFilters(T[] values) {
+	public void populateFilters(List<T> values) {
 		for (ResultFilter<T> filter : filters) {
 			filter.populate(values);
 		}

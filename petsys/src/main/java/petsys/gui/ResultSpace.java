@@ -1,8 +1,8 @@
 package petsys.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,7 +36,7 @@ public class ResultSpace<T extends Model> implements CustomComponent<JScrollPane
 	}
 
 	@Override
-	public void populate(T[] values) {
+	public void populate(List<T> values) {
 		for (T value : values) {
 			String entryLabel = eHandler.handle(value);
 			if (entryLabel != null) {

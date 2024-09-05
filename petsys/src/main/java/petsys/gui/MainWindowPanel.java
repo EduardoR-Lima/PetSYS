@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class MainWindowPanel implements CardComponent<JPanel> {
-
+	private static final String DEFAULT_CARD_ID = "default_card";
 	private static final String CARD_ID = "cardMainWindow";
 
 	private JPanel basePanel;
@@ -41,7 +41,7 @@ public class MainWindowPanel implements CardComponent<JPanel> {
 		
 		defaultPanel.add(logoLabel);
 		
-		workSpace.add(defaultPanel, "default");
+		workSpace.add(defaultPanel, DEFAULT_CARD_ID);
 		
 		basePanel.add(workSpace, BorderLayout.CENTER);
 
@@ -74,7 +74,7 @@ public class MainWindowPanel implements CardComponent<JPanel> {
 
 	private class CallWorkAreaCard implements ActionListener {
 		
-		private static String lastCard = "default";
+		private static String lastCard = DEFAULT_CARD_ID;
 		private String cardId;
 
 		public CallWorkAreaCard(String cardId) {
@@ -86,12 +86,11 @@ public class MainWindowPanel implements CardComponent<JPanel> {
 			// wal = work area layout
 			CardLayout wal = (CardLayout) workSpace.getLayout();
 			if (lastCard.equals(cardId)) {
-				wal.show(workSpace, "default");
-				lastCard = "deafult";
+				lastCard = DEFAULT_CARD_ID;
 			} else {
-				wal.show(workSpace, cardId);
 				lastCard = cardId;
 			}
+			wal.show(workSpace, lastCard);
 			
 		}
 

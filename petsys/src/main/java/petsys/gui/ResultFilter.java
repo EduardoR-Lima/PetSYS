@@ -4,13 +4,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import petsys.database.models.Model;
-import petsys.gui.Populateable.EntryHandler;
 
 public class ResultFilter<T extends Model> implements CustomComponent<JComboBox<String>>, Populateable<T> {
 
@@ -19,6 +20,7 @@ public class ResultFilter<T extends Model> implements CustomComponent<JComboBox<
 
 	public ResultFilter(String nome) {
 		comboBox = new JComboBox<>();
+		comboBox.insertItemAt(null, 0);
 		comboBox.setRenderer(new PromptComboBoxRenderer("[ %s ]".formatted(nome)));
 		comboBox.setPreferredSize(new Dimension(130, 30));
 
@@ -27,39 +29,36 @@ public class ResultFilter<T extends Model> implements CustomComponent<JComboBox<
 	public void setPopulateEntryHandler(EntryHandler<T> handler) {
 		this.eHandler = handler;
 	}
+	
+	public String applyEntryHandler(T model) {
+		return eHandler.handle(model);
+	}
 
 	public void setSelectionCallBack(SCallback callback) {
-
-		comboBox.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.DESELECTED) {
-					return;
-				}
-
-				String item = (String) e.getItem();
-
-				if (item == null) {
-					return;
-				}
-
-				callback.run(item);
+		comboBox.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				callback.run((String) e.getItem());
+			} else if (comboBox.getSelectedItem() == null) {
+				callback.run(null);
 			}
 		});
 	}
 
-	public void populate(T[] values) {
-		for (T value : values) {
-			String filterLine = eHandler.handle(value);
-			if (filterLine != null) {
+	public void populate(List<T> models) {
+		List<String> insertedValues = new ArrayList<>();
+		for (T model : models) {
+			String filterLine = applyEntryHandler(model);
+			
+			if (filterLine != null && !insertedValues.contains(filterLine)) {
 				comboBox.addItem(filterLine);
+				insertedValues.add(filterLine);
 			}
 		}
 	}
 	
 	public void clearItems() {
 		comboBox.removeAllItems();
+		comboBox.insertItemAt(null, 0);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package petsys.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.io.IOException;
@@ -9,17 +8,22 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
 
 import petsys.database.models.Cliente;
+import petsys.database.services.ModelService;
+import petsys.gui.panels.ClientesWorkPanel;
+import petsys.gui.panels.VendasWorkPanel;
 
 public class MainWindow {
-
+	
+	private ModelService<Cliente> clienteService;
+	
 	private JFrame frame;
 	private MainWindowPanel mwp;
 
-	public MainWindow() {
+	public MainWindow(ModelService<Cliente> clienteService) {
+		this.clienteService = clienteService;
+		
 		frame = new JFrame("PetSYS");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(1200, 700));
@@ -39,70 +43,10 @@ public class MainWindow {
 		// Criando instância
 		mwp = new MainWindowPanel();
 
-		CardComponent<JPanel> clientesTest = new CardComponent<>() {
-
-			private JPanel p;
-			private SearchHeader<Cliente> sh;
-			{
-				SpringLayout layout = new SpringLayout();
-				p = new JPanel(layout);
-				
-
-				sh = new SearchHeader<>("Clientes",
-						new String[] {"CPF", "Nome"});
-				ResultFilter<Cliente> filter = new ResultFilter<>("CPF");
-				filter.setSelectionCallBack(e -> {
-					System.out.println(e);
-				});
-				filter.setPopulateEntryHandler(e -> {
-					return e.getCpf();
-				});
-				Cliente cliente = new Cliente();
-				cliente.setCpf("08360125341");
-				filter.populate(new Cliente[] {cliente});
-				ResultFilter<Cliente> filter2 = new ResultFilter<>("Nome");
-				ResultFilter[] filters = {filter, filter2};
-				sh.addFilters(filters);
-				JPanel base = sh.getBaseComponent();
-
-				layout.putConstraint(SpringLayout.EAST, base, 0, SpringLayout.EAST, p);
-				layout.putConstraint(SpringLayout.WEST, base, 0, SpringLayout.WEST, p);
-				layout.putConstraint(SpringLayout.NORTH, base, 20, SpringLayout.NORTH, p);
-
-				p.add(base);
-				
-				ResultSpace<Cliente> rs = new ResultSpace<>();
-				rs.getBaseComponent().setBackground(Color.RED);
-				rs.setHasVisualizeButton(true);
-				layout.putConstraint(SpringLayout.NORTH, rs.getBaseComponent(), 0, SpringLayout.SOUTH, base);
-				layout.putConstraint(SpringLayout.SOUTH, rs.getBaseComponent(), 0, SpringLayout.SOUTH, p);
-				layout.putConstraint(SpringLayout.EAST, rs.getBaseComponent(), 0, SpringLayout.EAST, p);
-				layout.putConstraint(SpringLayout.WEST, rs.getBaseComponent(), 0, SpringLayout.WEST, p);
-				
-				rs.setPopulateEntryHandler(e -> {
-					return "%s - %s - %s".formatted(e.getNome(), e.getCpf(), e.getEmail());
-				});
-				
-				p.add(rs.getBaseComponent());
-				Cliente cliente1 = new Cliente(1, "08360125341", "Eduardo", "Rua gergelim", "85994361185", "limareduardo@gmail.com", "04092024");
-				Cliente cliente2 = new Cliente(1, "08360125341", "Eduarddsddo", "Rua gergelim", "85994361185", "limareduardo@gmail.com", "04092024");
-				rs.populate(new Cliente[] {cliente1, cliente2, cliente1, cliente1, cliente1, cliente1, cliente1, cliente1, cliente1, cliente1, cliente1});
-			}
-			
-			@Override
-			public JPanel getBaseComponent() {
-				return p;
-			}
-
-			@Override
-			public String getCardId() {
-				return "cardtest";
-			}
-		};
-
 		JButton bClientes = new MainButton("Clientes").getBaseComponent();
 		mwp.addSideBarButton(bClientes);
-		mwp.tieButtonTo(bClientes, clientesTest);
+		
+		mwp.tieButtonTo(bClientes, new ClientesWorkPanel(clienteService));
 
 		JButton bVendas = new MainButton("Vendas").getBaseComponent();
 		mwp.addSideBarButton(bVendas);
