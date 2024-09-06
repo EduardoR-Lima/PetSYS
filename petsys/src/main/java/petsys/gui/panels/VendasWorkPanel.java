@@ -1,6 +1,5 @@
 package petsys.gui.panels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import petsys.database.models.Cliente;
@@ -50,6 +49,8 @@ public class VendasWorkPanel extends AbstractWorkSpacePanel<Venda> {
 
 			@Override
 			public List<Venda> getResultModels(String searchKey, String searchEntry) {
+				//Apenas para testes
+				//Substituir pelo service responsável pelas vendas
 				Venda venda = new Venda(1, "04092024", "Pix", new Cliente(), new NotaFiscal());
 				Venda venda2 = new Venda(2, "05092024", "Cartão", new Cliente(), new NotaFiscal());
 				return List.of(venda, venda, venda2, venda, venda);

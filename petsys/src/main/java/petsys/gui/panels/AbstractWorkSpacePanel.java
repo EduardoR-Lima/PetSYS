@@ -126,6 +126,8 @@ public abstract class AbstractWorkSpacePanel<T extends Model> implements CardCom
 
 		for (ResultFilter<T> filter : filters) {
 			filter.setSelectionCallBack(e -> {
+				if (lastResult == null) return;
+				
 				if (e == null) {
 					repopulateRs(lastResult);
 					return;
